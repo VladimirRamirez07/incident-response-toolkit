@@ -4,6 +4,7 @@ from typing import List
 from app.database import get_db
 from app.models.alert import Alert
 from app.schemas.alert import AlertCreate, AlertUpdate, AlertResponse
+from app.services.websocket_manager import manager
 
 router = APIRouter(prefix="/alerts", tags=["alerts"])
 
@@ -25,6 +26,13 @@ async def create_alert(alert: AlertCreate, db: Session = Depends(get_db)):
     db.add(db_alert)
     db.commit()
     db.refresh(db_alert)
+    # Notificar en tiempo real
+    await manager.broadcast_new_alert({
+        "id": db_alert.id,
+        "title": db_alert.title,
+        "source": db_alert.source,
+        "status": db_alert.status.value
+    })
     return db_alert
 
 @router.put("/{alert_id}", response_model=AlertResponse)

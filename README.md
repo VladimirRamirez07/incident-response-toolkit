@@ -37,22 +37,23 @@ A full-stack Security Operations Center (SOC) platform that centralizes security
 
 ## 🏗️ Architecture
 incident-response-toolkit/
-├── backend/                    # FastAPI + Python
+│
+├── backend/
 │   ├── app/
-│   │   ├── api/                # REST endpoints + WebSockets
+│   │   ├── api/
 │   │   │   ├── incidents.py
 │   │   │   ├── alerts.py
 │   │   │   ├── reports.py
 │   │   │   └── websockets.py
-│   │   ├── models/             # SQLAlchemy models
+│   │   ├── models/
 │   │   │   ├── incident.py
 │   │   │   ├── user.py
 │   │   │   └── alert.py
-│   │   ├── schemas/            # Pydantic schemas
+│   │   ├── schemas/
 │   │   │   ├── incident.py
 │   │   │   ├── user.py
 │   │   │   └── alert.py
-│   │   ├── services/           # Business logic
+│   │   ├── services/
 │   │   │   ├── websocket_manager.py
 │   │   │   └── report_generator.py
 │   │   ├── config.py
@@ -60,11 +61,12 @@ incident-response-toolkit/
 │   │   └── main.py
 │   ├── requirements.txt
 │   └── Dockerfile
-├── frontend/                   # React + Vite
+│
+├── frontend/
 │   └── src/
 │       ├── api/
-│       │   ├── client.js       # Axios REST client
-│       │   └── websocket.js    # WebSocket service
+│       │   ├── client.js
+│       │   └── websocket.js
 │       ├── components/
 │       │   ├── IncidentCard.jsx
 │       │   └── AlertBadge.jsx
@@ -72,6 +74,7 @@ incident-response-toolkit/
 │       │   └── Dashboard.jsx
 │       ├── App.jsx
 │       └── main.jsx
+│
 ├── docker-compose.yml
 └── README.md
 ---

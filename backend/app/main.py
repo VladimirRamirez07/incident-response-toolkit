@@ -4,6 +4,7 @@ from app.database import engine
 from app.models import Incident, User, Alert
 from app.database import Base
 from app.config import settings
+from app.api import api_router
 
 # Crear tablas automáticamente
 Base.metadata.create_all(bind=engine)
@@ -21,6 +22,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Incluir rutas
+app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/")
 async def root():

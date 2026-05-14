@@ -36,6 +36,9 @@ A full-stack Security Operations Center (SOC) platform that centralizes security
 ---
 
 ## 🏗️ Architecture
+## 🏗️ Architecture
+
+```
 incident-response-toolkit/
 |
 +-- backend/
@@ -77,6 +80,7 @@ incident-response-toolkit/
 |
 +-- docker-compose.yml
 +-- README.md
+```
 ---
 
 ## 🚀 Quick Start

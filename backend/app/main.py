@@ -1,8 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.database import engine
+from app.models import Incident, User, Alert
+from app.database import Base
+from app.config import settings
+
+# Crear tablas automáticamente
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Incident Response Toolkit",
+    title=settings.APP_NAME,
     description="SOC platform for real-time incident management",
     version="1.0.0"
 )
@@ -17,8 +24,8 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Incident Response Toolkit API", "status": "running"}
+    return {"message": f"{settings.APP_NAME} API", "status": "running"}
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "app": settings.APP_NAME}

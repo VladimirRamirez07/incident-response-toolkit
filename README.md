@@ -40,46 +40,46 @@ A full-stack Security Operations Center (SOC) platform that centralizes security
 
 ```
 incident-response-toolkit/
-|
-+-- backend/
-|   +-- app/
-|   |   +-- api/
-|   |   |   +-- incidents.py
-|   |   |   +-- alerts.py
-|   |   |   +-- reports.py
-|   |   |   +-- websockets.py
-|   |   +-- models/
-|   |   |   +-- incident.py
-|   |   |   +-- user.py
-|   |   |   +-- alert.py
-|   |   +-- schemas/
-|   |   |   +-- incident.py
-|   |   |   +-- user.py
-|   |   |   +-- alert.py
-|   |   +-- services/
-|   |   |   +-- websocket_manager.py
-|   |   |   +-- report_generator.py
-|   |   +-- config.py
-|   |   +-- database.py
-|   |   +-- main.py
-|   +-- requirements.txt
-|   +-- Dockerfile
-|
-+-- frontend/
-|   +-- src/
-|       +-- api/
-|       |   +-- client.js
-|       |   +-- websocket.js
-|       +-- components/
-|       |   +-- IncidentCard.jsx
-|       |   +-- AlertBadge.jsx
-|       +-- pages/
-|       |   +-- Dashboard.jsx
-|       +-- App.jsx
-|       +-- main.jsx
-|
-+-- docker-compose.yml
-+-- README.md
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── incidents.py
+│   │   │   ├── alerts.py
+│   │   │   ├── reports.py
+│   │   │   └── websockets.py
+│   │   ├── models/
+│   │   │   ├── incident.py
+│   │   │   ├── user.py
+│   │   │   └── alert.py
+│   │   ├── schemas/
+│   │   │   ├── incident.py
+│   │   │   ├── user.py
+│   │   │   └── alert.py
+│   │   ├── services/
+│   │   │   ├── websocket_manager.py
+│   │   │   └── report_generator.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   └── main.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── frontend/
+│   └── src/
+│       ├── api/
+│       │   ├── client.js
+│       │   └── websocket.js
+│       ├── components/
+│       │   ├── IncidentCard.jsx
+│       │   └── AlertBadge.jsx
+│       ├── pages/
+│       │   └── Dashboard.jsx
+│       ├── App.jsx
+│       └── main.jsx
+│
+├── docker-compose.yml
+└── README.md
 ```
 ---
 

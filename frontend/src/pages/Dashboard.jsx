@@ -4,6 +4,10 @@ import { wsService } from '../api/websocket'
 import IncidentCard from '../components/IncidentCard'
 import AlertBadge from '../components/AlertBadge'
 import { Shield, AlertTriangle, Bell, Activity, LogOut } from 'lucide-react'
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+
+const SEVERITY_COLORS = { P1: '#ff4444', P2: '#ff6600', P3: '#ffaa00', P4: '#3fb950' }
+const STATUS_COLORS = { open: '#ff4444', in_progress: '#ffaa00', resolved: '#3fb950', closed: '#888' }
 
 export default function Dashboard({ token, onLogout }) {
   const [incidents, setIncidents] = useState([])
@@ -32,13 +36,22 @@ export default function Dashboard({ token, onLogout }) {
   }
 
   const handleWsMessage = (message) => {
-    if (message.type === 'new_alert') {
-      setAlerts(prev => [message.data, ...prev])
-    }
-    if (message.type === 'incident_update') {
-      loadData()
-    }
+    if (message.type === 'new_alert') setAlerts(prev => [message.data, ...prev])
+    if (message.type === 'incident_update') loadData()
   }
+
+  // Chart data
+  const severityData = ['P1', 'P2', 'P3', 'P4'].map(s => ({
+    name: s,
+    value: incidents.filter(i => i.severity === s).length,
+    color: SEVERITY_COLORS[s]
+  })).filter(d => d.value > 0)
+
+  const statusData = ['open', 'in_progress', 'resolved', 'closed'].map(s => ({
+    name: s.replace('_', ' ').toUpperCase(),
+    value: incidents.filter(i => i.status === s).length,
+    color: STATUS_COLORS[s]
+  })).filter(d => d.value > 0)
 
   const p1Count = incidents.filter(i => i.severity === 'P1').length
   const p2Count = incidents.filter(i => i.severity === 'P2').length
@@ -52,35 +65,24 @@ export default function Dashboard({ token, onLogout }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Shield size={32} color="#58a6ff" />
           <div>
-            <h1 style={{ margin: 0, fontSize: '24px', color: '#58a6ff' }}>
-              Incident Response Toolkit
-            </h1>
+            <h1 style={{ margin: 0, fontSize: '24px', color: '#58a6ff' }}>Incident Response Toolkit</h1>
             <span style={{ fontSize: '12px', color: connected ? '#3fb950' : '#f85149' }}>
               ● {connected ? 'Connected' : 'Disconnected'}
             </span>
           </div>
         </div>
-        <button
-          onClick={onLogout}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: '#ff444420',
-            border: '1px solid #ff4444',
-            borderRadius: '8px',
-            color: '#ff4444',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontSize: '14px',
-          }}
-        >
+        <button onClick={onLogout} style={{
+          display: 'flex', alignItems: 'center', gap: '8px',
+          background: '#ff444420', border: '1px solid #ff4444',
+          borderRadius: '8px', color: '#ff4444', padding: '8px 16px',
+          cursor: 'pointer', fontSize: '14px',
+        }}>
           <LogOut size={16} /> Sign Out
         </button>
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
           { label: 'Open Incidents', value: openCount, icon: <Activity size={20} />, color: '#58a6ff' },
           { label: 'Critical (P1)', value: p1Count, icon: <AlertTriangle size={20} />, color: '#ff4444' },
@@ -88,13 +90,9 @@ export default function Dashboard({ token, onLogout }) {
           { label: 'New Alerts', value: newAlerts, icon: <Bell size={20} />, color: '#ffaa00' },
         ].map((stat, i) => (
           <div key={i} style={{
-            background: '#161b22',
-            border: '1px solid #30363d',
-            borderRadius: '10px',
-            padding: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
+            background: '#161b22', border: '1px solid #30363d',
+            borderRadius: '10px', padding: '20px',
+            display: 'flex', alignItems: 'center', gap: '16px',
           }}>
             <div style={{ color: stat.color }}>{stat.icon}</div>
             <div>
@@ -105,9 +103,46 @@ export default function Dashboard({ token, onLogout }) {
         ))}
       </div>
 
-      {/* Content */}
+      {/* Charts */}
+      {incidents.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+          {/* Severity Pie Chart */}
+          <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '10px', padding: '20px' }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: '16px', color: '#58a6ff' }}>
+              Incidents by Severity
+            </h2>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie data={severityData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                  {severityData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: '#161b22', border: '1px solid #30363d', color: '#e6edf3' }} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Status Bar Chart */}
+          <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '10px', padding: '20px' }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: '16px', color: '#58a6ff' }}>
+              Incidents by Status
+            </h2>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={statusData}>
+                <XAxis dataKey="name" tick={{ fill: '#8b949e', fontSize: 12 }} />
+                <YAxis tick={{ fill: '#8b949e', fontSize: 12 }} />
+                <Tooltip contentStyle={{ background: '#161b22', border: '1px solid #30363d', color: '#e6edf3' }} />
+                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                  {statusData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {/* Incidents & Alerts */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-        {/* Incidents */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '10px', padding: '20px' }}>
           <h2 style={{ margin: '0 0 16px', fontSize: '16px', color: '#58a6ff' }}>
             <AlertTriangle size={16} style={{ marginRight: '8px' }} />
@@ -118,8 +153,6 @@ export default function Dashboard({ token, onLogout }) {
             : incidents.map(i => <IncidentCard key={i.id} incident={i} />)
           }
         </div>
-
-        {/* Alerts */}
         <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '10px', padding: '20px' }}>
           <h2 style={{ margin: '0 0 16px', fontSize: '16px', color: '#ffaa00' }}>
             <Bell size={16} style={{ marginRight: '8px' }} />

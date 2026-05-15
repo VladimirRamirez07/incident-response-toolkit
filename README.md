@@ -2,6 +2,7 @@
 
 > SOC platform for real-time incident management, alert centralization, and post-mortem report generation.
 
+![CI/CD](https://github.com/VladimirRamirez07/incident-response-toolkit/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -11,8 +12,9 @@
 ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat-square&logo=sqlalchemy&logoColor=white)
 ![Pydantic](https://img.shields.io/badge/Pydantic-2.6-E92063?style=flat-square&logo=pydantic&logoColor=white)
 ![WebSockets](https://img.shields.io/badge/WebSockets-Real--time-010101?style=flat-square&logo=socketdotio&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
 ![ReportLab](https://img.shields.io/badge/ReportLab-PDF-FF0000?style=flat-square&logo=adobeacrobatreader&logoColor=white)
-![Axios](https://img.shields.io/badge/Axios-1.6-5A29E4?style=flat-square&logo=axios&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-Tests-0A9EDC?style=flat-square&logo=pytest&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
@@ -30,7 +32,9 @@ A full-stack Security Operations Center (SOC) platform that centralizes security
 - 👥 **Case assignment** to SOC analysts
 - 📅 **Complete timeline** tracking per incident
 - 📄 **Post-mortem PDF reports** exportable
-- 🔒 **RESTful API** with FastAPI + automatic Swagger docs
+- 🔐 **JWT Authentication** with protected routes
+- 🔒 **RESTful API** with FastAPI + Swagger docs
+- 🧪 **Automated tests** with Pytest + GitHub Actions CI/CD
 - 🐳 **Fully containerized** with Docker Compose
 
 ---
@@ -80,6 +84,7 @@ incident-response-toolkit/
 ├── docker-compose.yml
 └── README.md
 ```
+
 ---
 
 ## 🚀 Quick Start
@@ -101,13 +106,26 @@ docker-compose up --build
 | Service | URL |
 |---------|-----|
 | Frontend Dashboard | http://localhost:3000 |
-| Backend API | http://localhost:8000 |
-| Swagger API Docs | http://localhost:8000/docs |
-| ReDoc API Docs | http://localhost:8000/redoc |
+| Backend API | http://localhost:8001 |
+| Swagger API Docs | http://localhost:8001/docs |
+| ReDoc API Docs | http://localhost:8001/redoc |
+
+### Default credentials
+```
+Username: analyst01
+Password: soc123456
+```
 
 ---
 
 ## 📡 API Endpoints
+
+### Auth
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/register` | Register new analyst |
+| POST | `/api/v1/auth/login` | Login and get JWT token |
+| GET | `/api/v1/auth/me` | Get current user |
 
 ### Incidents
 | Method | Endpoint | Description |
@@ -133,7 +151,7 @@ docker-compose up --build
 ### WebSocket
 | Endpoint | Description |
 |----------|-------------|
-| `ws://localhost:8000/api/v1/ws` | Real-time alert broadcasting |
+| `ws://localhost:8001/api/v1/ws` | Real-time alert broadcasting |
 
 ---
 
@@ -148,6 +166,16 @@ docker-compose up --build
 
 ---
 
+## 🧪 Testing
+
+```bash
+cd backend
+pip install pytest pytest-asyncio httpx
+pytest tests/ -v
+```
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
@@ -156,9 +184,10 @@ docker-compose up --build
 | Frontend | React 18, Vite, Recharts, Lucide |
 | Database | PostgreSQL 15 |
 | Real-time | WebSockets |
+| Auth | JWT (python-jose, passlib, bcrypt) |
 | Reports | ReportLab (PDF) |
-| Auth | JWT (python-jose, passlib) |
-| DevOps | Docker, Docker Compose |
+| Testing | Pytest, httpx |
+| DevOps | Docker, Docker Compose, GitHub Actions |
 
 ---
 

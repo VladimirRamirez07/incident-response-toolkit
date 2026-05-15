@@ -13,9 +13,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       DATABASE_URL: postgresql://soc_user:soc_pass@db:5432/soc_db
     depends_on:
@@ -24,13 +26,16 @@ services:
       - ./backend:/app
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   postgres_data:

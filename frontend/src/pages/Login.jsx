@@ -16,7 +16,7 @@ export default function Login({ onLogin }) {
       const form = new FormData()
       form.append('username', username)
       form.append('password', password)
-      const res = await axios.post('http://localhost:8000/api/v1/auth/login', form)
+      const res = await axios.post('http://localhost:8001/api/v1/auth/login', form)
       localStorage.setItem('token', res.data.access_token)
       onLogin(res.data.access_token)
     } catch (err) {

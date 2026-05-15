@@ -1,5 +1,4 @@
-const WS_URL = 'ws://localhost:8000/api/v1/ws'
-
+const WS_URL = 'ws://localhost:8001/api/v1/ws'
 class WebSocketService {
   constructor() {
     this.ws = null

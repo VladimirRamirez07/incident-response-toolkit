@@ -3,9 +3,9 @@ import { incidentsAPI, alertsAPI } from '../api/client'
 import { wsService } from '../api/websocket'
 import IncidentCard from '../components/IncidentCard'
 import AlertBadge from '../components/AlertBadge'
-import { Shield, AlertTriangle, Bell, Activity } from 'lucide-react'
+import { Shield, AlertTriangle, Bell, Activity, LogOut } from 'lucide-react'
 
-export default function Dashboard() {
+export default function Dashboard({ token, onLogout }) {
   const [incidents, setIncidents] = useState([])
   const [alerts, setAlerts] = useState([])
   const [connected, setConnected] = useState(false)
@@ -48,16 +48,35 @@ export default function Dashboard() {
   return (
     <div style={{ minHeight: '100vh', background: '#0d1117', color: '#e6edf3', padding: '24px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
-        <Shield size={32} color="#58a6ff" />
-        <div>
-          <h1 style={{ margin: 0, fontSize: '24px', color: '#58a6ff' }}>
-            Incident Response Toolkit
-          </h1>
-          <span style={{ fontSize: '12px', color: connected ? '#3fb950' : '#f85149' }}>
-            ● {connected ? 'Connected' : 'Disconnected'}
-          </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Shield size={32} color="#58a6ff" />
+          <div>
+            <h1 style={{ margin: 0, fontSize: '24px', color: '#58a6ff' }}>
+              Incident Response Toolkit
+            </h1>
+            <span style={{ fontSize: '12px', color: connected ? '#3fb950' : '#f85149' }}>
+              ● {connected ? 'Connected' : 'Disconnected'}
+            </span>
+          </div>
         </div>
+        <button
+          onClick={onLogout}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#ff444420',
+            border: '1px solid #ff4444',
+            borderRadius: '8px',
+            color: '#ff4444',
+            padding: '8px 16px',
+            cursor: 'pointer',
+            fontSize: '14px',
+          }}
+        >
+          <LogOut size={16} /> Sign Out
+        </button>
       </div>
 
       {/* Stats */}
